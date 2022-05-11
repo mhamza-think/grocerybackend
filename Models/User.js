@@ -17,11 +17,7 @@ const User = new mongoose.Schema({
  password:{
      type:String,
      required:[true,'Password is required']
- },
- confirmPassword:{
-    type:String,
-    required:[true,'ConfirmPassword is required']
-}
+ }
 })
 
-module.exports = mongoose.model('User',User);
+module.exports = mongoose.model('users',User);

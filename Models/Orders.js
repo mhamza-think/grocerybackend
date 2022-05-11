@@ -1,37 +1,45 @@
 const mongoose = require("mongoose");
-// A
+const itemSchema = new mongoose.Schema({
+  productId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "products",
+  },
+  payablePrice: {
+    type: Number,
+    required: true,
+  },
+  purchasedQty: {
+    type: Number,
+    required: true,
+  }
+})
+const orderStatusSchema = new mongoose.Schema({
+  type: {
+    type: String,
+    enum: ["ordered", "packed", "shipped", "delivered"],
+    default: "ordered",
+  },
+  date: {
+    type: Date,
+  },
+  isCompleted: {
+    type: Boolean,
+    default: false,
+  }
+})
+
 const Orders = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+      ref: "users",
     },
-    addressId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "UserAddress.address",
-      required: true,
-    },
+
     totalAmount: {
       type: Number,
       required: true,
     },
-    items: [
-      {
-        productId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Product",
-        },
-        payablePrice: {
-          type: Number,
-          required: true,
-        },
-        purchasedQty: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
+
     paymentStatus: {
       type: String,
       enum: ["pending", "completed", "cancelled", "refund"],
@@ -42,24 +50,18 @@ const Orders = new mongoose.Schema(
       enum: ["cod", "card"],
       required: true,
     },
-    orderStatus: [
-      {
-        type: {
-          type: String,
-          enum: ["ordered", "packed", "shipped", "delivered"],
-          default: "ordered",
-        },
-        date: {
-          type: Date,
-        },
-        isCompleted: {
-          type: Boolean,
-          default: false,
-        },
-      },
-    ],
-  },
-  { timestamps: true }
-);
+    items: [itemSchema],
+    orderStatus: [orderStatusSchema],
 
-module.exports = mongoose.model("Order", Orders);
+    createdDate: {
+      type: Date,
+      default: Date.now()
+    },
+    enable:{
+      type:Boolean,
+      default:true
+    }
+
+  });
+
+module.exports = mongoose.model("orders", Orders);

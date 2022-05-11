@@ -4,7 +4,12 @@ const app = express();
 
 app.use=(express.json());
 
+const connectDB = require('./DB/conn');
 
-app.listen(3000,function (){
-    console.log('server is running on port 3000');
+connectDB();
+
+const port = process.env.PORT;
+
+app.listen(port,function (){
+    console.log(`server running on port no ${port}`);
 })
